@@ -1,0 +1,11 @@
+server:
+  port: ${SERVER_PORT:9500}
+
+spring:
+  application:
+    name: ${APP_NAME:reporting-service}
+
+  datasource:
+    url: ${POSTGRE_SQL:jdbc:postgresql://localhost:5432}/reportingdb
+    username: user
+    password: pass
