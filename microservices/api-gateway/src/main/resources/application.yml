@@ -1,6 +1,58 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: ${APP_NAME:api-gateway}
-
   config:
     import: configserver:${CONFIG_SERVER_URL:http://localhost:8888}
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Enables looking up services from Eureka by service ID
+          lower-case-service-id: true # Optional: if service IDs in Eureka are lowercase
+      routes:
+        - id: auth-service-route
+          uri: lb://AUTH-SERVICE # Use uppercase service ID if that's how it's registered in Eureka
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - RewritePath=/auth-service/(?<segment>.*), /$\{segment}
+        - id: user-service-route
+          uri: lb://USER-SERVICE # Use uppercase service ID
+          predicates:
+            - Path=/user-service/**
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-service:9000 # Auth-service's issuer URI (use internal host if gateway and auth-service are in the same Docker network)
+          # For local development, if auth-service is running on localhost:9000, this would be:
+          # issuer-uri: http://localhost:9000
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.security: INFO # Can be TRACE for debugging
+    dev.skyang: DEBUG
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}
+    # fetchRegistry: true # default is true
+    # registerWithEureka: true # default is true
+  instance:
+    preferIpAddress: true
+    # hostname: api-gateway
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    show-details: always

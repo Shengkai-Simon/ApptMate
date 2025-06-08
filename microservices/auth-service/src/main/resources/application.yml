@@ -1,6 +1,59 @@
+server:
+  port: 9000
+
 spring:
   application:
     name: ${APP_NAME:auth-service}
-
   config:
     import: configserver:${CONFIG_SERVER_URL:http://localhost:8888}
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          oidc-client: # Example client
+            registrationId: oidc-client
+            client-id: "oidc-client"
+            client-secret: "{noop}secret"
+            client-authentication-methods:
+              - "client_secret_basic"
+            authorization-grant-types:
+              - "authorization_code"
+              - "refresh_token"
+              - "client_credentials"
+              - "password" # Added password grant type
+            redirect-uris:
+              - "http://127.0.0.1:8080/login/oauth2/code/oidc-client" # Example redirect URI for a client app
+            scopes:
+              - "openid"
+              - "profile"
+            client-settings:
+              require-proof-key: true # Example using PKCE for public clients
+              require-authorization-consent: true
+        issuer: http://auth-service:9000 # Default for local, should be configurable via environment variables
+
+# Configuration for User Service client
+user:
+  service:
+    base:
+      url: http://user-service:8081 # Assuming user-service runs on 8081
+
+logging:
+  level:
+    org.springframework.security: INFO # Default to INFO, can be TRACE for debugging
+    dev.skyang: DEBUG
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}
+  instance:
+    preferIpAddress: true
+    # hostname: auth-service # Not needed if preferIpAddress is true, good for local dev if not using preferIpAddress
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Expose all actuator endpoints
+  health:
+    show-details: always

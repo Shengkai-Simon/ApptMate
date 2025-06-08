@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop # Automatically create schema on startup and drop on shutdown for tests
+    show-sql: true # Optional: show SQL queries in test logs
+  # Disable Eureka and Config Server for tests to avoid external dependencies
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      enabled: false
+  # Security config for tests might be simplified if not testing actual security rules here
+  # For example, if resource server JWT validation is not desired for these specific unit/integration tests.
+  # However, for /api/users/register, it's open, so default security setup should be fine.
+  # For /api/users/internal/**, it's also open.
+  # If tests were to access other secured endpoints, more mock security setup might be needed.
+
+logging:
+  level:
+    org.springframework.security: DEBUG # If needed for security debugging in tests
+    org.hibernate.SQL: DEBUG # If show-sql is true and want to see parameters
+    # dev.skyang: DEBUG
+---
+# Separate document for Spring Security specific test properties if needed (e.g. disable default security)
+# spring:
+#   security:
+#     oauth2:
+#       resourceserver:
+#         jwt:
+#           issuer-uri: http://dummy-issuer # Provide a dummy if validation is active and not mocked
+# Or disable security for certain test profiles if not testing security features
+# spring:
+#   security:
+#     enabled: false # This is a very broad switch, use with caution

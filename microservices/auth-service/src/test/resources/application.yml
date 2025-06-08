@@ -1,0 +1,39 @@
+user:
+  service:
+    base:
+      url: http://user-service:8081 # This will be mocked by MockRestServiceServer
+
+spring:
+  # Disable Eureka and Config Server for tests to avoid external dependencies
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      enabled: false
+  # For testing RemoteUserDetailsService, we don't need a real authorization server setup
+  # We are testing the service's ability to call the (mocked) user-service
+  security:
+    oauth2:
+      authorizationserver:
+        client: # Minimal client config to prevent startup errors if auto-config expects it
+          dummy-client:
+            registrationId: dummy-client
+            client-id: "dummy-client"
+            client-secret: "{noop}dummy-secret"
+            client-authentication-methods:
+              - "client_secret_basic"
+            authorization-grant-types:
+              - "client_credentials"
+            scopes:
+              - "dummy.scope"
+        issuer: http://test-auth-service:9000 # Dummy issuer for test context
+
+# To ensure RemoteUserDetailsService is picked up and tested,
+# and not a default in-memory UserDetailsService if one were auto-configured.
+# The actual SecurityConfig for the app should properly wire RemoteUserDetailsService.
+
+logging:
+  level:
+    dev.skyang.authservice: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG # Useful for MockRestServiceServer
+    org.springframework.security: INFO # Or DEBUG if needed
