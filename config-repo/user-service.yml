@@ -7,7 +7,7 @@ spring:
         jwt:
           issuer-uri: http://auth-service:9000 # Service name for internal communication
   datasource:
-    url: jdbc:postgresql://${DB_HOST:postgresql_db}:${DB_PORT:5432}/${DB_NAME_USER:user_db} # Changed default host to postgresql_db
+    url: jdbc:postgresql://${DB_HOST:postgresql_db}:${DB_PORT:5432}/${DB_NAME_USER:userdb} # Changed from user_db to userdb
     username: ${DB_USERNAME_USER:user}
     password: ${DB_PASSWORD_USER:password}
     driver-class-name: org.postgresql.Driver

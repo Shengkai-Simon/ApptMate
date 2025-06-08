@@ -1,11 +1,16 @@
 server:
-  port: ${SERVER_PORT:9300}
-
+  port: 9300 # Default, will be overridden by Docker Compose if needed
 spring:
   application:
-    name: ${APP_NAME:availability-service}
-
+    name: availability-service
   datasource:
-    url: ${POSTGRE_SQL:jdbc:postgresql://localhost:5432}/availabilitydb
-    username: user
-    password: pass
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME_AVAILABILITY:availabilitydb}
+    username: ${DB_USERNAME_AVAILABILITY:user}
+    password: ${DB_PASSWORD_AVAILABILITY:pass}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # Or 'validate' in prod
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

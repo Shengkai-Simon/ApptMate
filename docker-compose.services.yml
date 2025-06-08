@@ -72,7 +72,7 @@ services:
       CONFIG_SERVER_URL: http://config-service:8888
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME_USER: user_db
+      DB_NAME_USER: userdb # Changed from user_db
       DB_USERNAME_USER: user
       DB_PASSWORD_USER: pass
     depends_on:
@@ -92,7 +92,7 @@ services:
       CONFIG_SERVER_URL: http://config-service:8888
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME_BOOKING: booking_db
+      DB_NAME_BOOKING: bookingdb # Changed from booking_db
       DB_USERNAME_BOOKING: user
       DB_PASSWORD_BOOKING: pass
     depends_on:
@@ -112,7 +112,7 @@ services:
       CONFIG_SERVER_URL: http://config-service:8888
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME_AVAILABILITY: availability_db
+      DB_NAME_AVAILABILITY: availabilitydb # Changed from availability_db
       DB_USERNAME_AVAILABILITY: user
       DB_PASSWORD_AVAILABILITY: pass
     depends_on:
@@ -148,7 +148,7 @@ services:
       CONFIG_SERVER_URL: http://config-service:8888
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME_REPORTING: reporting_db
+      DB_NAME_REPORTING: reportingdb # Changed from reporting_db
       DB_USERNAME_REPORTING: user
       DB_PASSWORD_REPORTING: pass
     depends_on:
