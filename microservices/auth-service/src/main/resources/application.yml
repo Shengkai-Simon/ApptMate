@@ -1,1 +1,8 @@
-# Configurations are now managed by Spring Cloud Config Server.
+spring:
+  application:
+    name: auth-service
+  config:
+    import: "configserver:${CONFIG_SERVER_URL:http://config-service:8888}" # Correct property
+  cloud:
+    config:
+      fail-fast: true # Keep fail-fast

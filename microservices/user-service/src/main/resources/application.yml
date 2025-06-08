@@ -1,3 +1,8 @@
-# Configurations are now managed by Spring Cloud Config Server.
-# This file can be used for local overrides not suitable for config-repo,
-# or profiles specific to local development if not using config server for local.
+spring:
+  application:
+    name: user-service
+  config:
+    import: "configserver:${CONFIG_SERVER_URL:http://config-service:8888}" # Correct property
+  cloud:
+    config:
+      fail-fast: true # Keep fail-fast if desired, it's a good practice
