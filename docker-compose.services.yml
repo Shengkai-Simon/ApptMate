@@ -25,9 +25,7 @@ services:
     environment:
       SERVER_PORT: 8761
       APP_NAME: discovery-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_JWK_SET_URI: ${JWT_JWK_SET_URI}
+      CONFIG_SERVER_URL: http://config-service:8888
     depends_on:
       - config-service
     networks:
@@ -41,9 +39,7 @@ services:
     environment:
       SERVER_PORT: 8080
       APP_NAME: api-gateway
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_JWK_SET_URI: ${JWT_JWK_SET_URI}
+      CONFIG_SERVER_URL: http://config-service:8888
     depends_on:
       - config-service
       - discovery-service
@@ -58,10 +54,7 @@ services:
     environment:
       SERVER_PORT: 9000
       APP_NAME: auth-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
-      POSTGRE_SQL: ${POSTGRE_SQL}
+      CONFIG_SERVER_URL: http://config-service:8888
     depends_on:
       - config-service
       - discovery-service
@@ -72,14 +65,16 @@ services:
     build: ./microservices/user-service
     container_name: user-service
     ports:
-      - "9100:9100"
+      - "8081:8081"
     environment:
-      SERVER_PORT: 9100
+      SERVER_PORT: 8081 # Port changed
       APP_NAME: user-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
-      POSTGRE_SQL: ${POSTGRE_SQL}
+      CONFIG_SERVER_URL: http://config-service:8888
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME_USER: user_db
+      DB_USERNAME_USER: user
+      DB_PASSWORD_USER: pass
     depends_on:
       - config-service
       - discovery-service
@@ -94,10 +89,12 @@ services:
     environment:
       SERVER_PORT: 9200
       APP_NAME: booking-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
-      POSTGRE_SQL: ${POSTGRE_SQL}
+      CONFIG_SERVER_URL: http://config-service:8888
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME_BOOKING: booking_db
+      DB_USERNAME_BOOKING: user
+      DB_PASSWORD_BOOKING: pass
     depends_on:
       - config-service
       - discovery-service
@@ -112,10 +109,12 @@ services:
     environment:
       SERVER_PORT: 9300
       APP_NAME: availability-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
-      POSTGRE_SQL: ${POSTGRE_SQL}
+      CONFIG_SERVER_URL: http://config-service:8888
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME_AVAILABILITY: availability_db
+      DB_USERNAME_AVAILABILITY: user
+      DB_PASSWORD_AVAILABILITY: pass
     depends_on:
       - config-service
       - discovery-service
@@ -130,11 +129,8 @@ services:
     environment:
       SERVER_PORT: 9400
       APP_NAME: notification-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
-      POSTGRE_SQL: ${POSTGRE_SQL}
-      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      CONFIG_SERVER_URL: http://config-service:8888
+      RABBITMQ_HOST: rabbitmq
     depends_on:
       - config-service
       - discovery-service
@@ -149,10 +145,12 @@ services:
     environment:
       SERVER_PORT: 9500
       APP_NAME: reporting-service
-      CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      EUREKA_URL: ${EUREKA_URL}
-      JWT_ISSUER_URI: ${JWT_ISSUER_URI}
-      POSTGRE_SQL: ${POSTGRE_SQL}
+      CONFIG_SERVER_URL: http://config-service:8888
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME_REPORTING: reporting_db
+      DB_USERNAME_REPORTING: user
+      DB_PASSWORD_REPORTING: pass
     depends_on:
       - config-service
       - discovery-service

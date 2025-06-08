@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: user-service # Matches config-repo/user-service.yml
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:http://config-service:8888}
+      fail-fast: true # Recommended: fail startup if config server is not available

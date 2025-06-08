@@ -1,25 +1,18 @@
+# Common configurations for all services
 eureka:
   client:
-    service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
-    register-with-eureka: true
-    fetch-registry: true
-
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://discovery-service:8761/eureka/} # Changed from eureka-server to discovery-service based on typical naming
+  instance:
+    preferIpAddress: true
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
-
-spring:
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${JWT_ISSUER_URI:http://localhost:9000}
+        include: "*"
+  health:
+    show-details: always
+logging:
+  level:
+    org.springframework.security: INFO
+    dev.skyang: DEBUG # Assuming this is a common application package prefix

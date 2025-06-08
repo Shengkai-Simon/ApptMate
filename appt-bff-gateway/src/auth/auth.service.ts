@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   async login(username: string, password_val: string): Promise<any> {
-    const tokenUrl = `${this.apiGatewayUrl}/auth-service/oauth2/token`;
+    const tokenUrl = `${this.apiGatewayUrl}/auth/oauth2/token`; // Updated path
     const requestBody = {
       grant_type: 'password',
       username: username,
@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   async register(username: string, password_val: string, email: string): Promise<any> {
-    const registerUrl = `${this.apiGatewayUrl}/user-service/api/users/register`;
+    const registerUrl = `${this.apiGatewayUrl}/users/register`; // Updated path
     const requestBody = { username, password: password_val, email }; // Renamed password to avoid conflict
 
     this.logger.debug(`Attempting registration for user: ${username} to ${registerUrl}`);

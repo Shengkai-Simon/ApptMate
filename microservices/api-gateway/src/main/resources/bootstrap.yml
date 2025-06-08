@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: api-gateway # Matches config-repo/api-gateway.yml
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:http://config-service:8888}
+      fail-fast: true

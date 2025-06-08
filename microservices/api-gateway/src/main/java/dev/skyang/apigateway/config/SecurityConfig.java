@@ -20,12 +20,14 @@ public class SecurityConfig {
                 // Requests to /auth-service/** are routed to auth-service.
                 // The gateway itself doesn't need to apply additional auth for this specific path if auth-service secures it.
                 // However, if the token endpoint is exposed through the gateway, it should be reachable.
-                .pathMatchers("/auth-service/oauth2/token").permitAll()
-                .pathMatchers("/auth-service/**").permitAll() // Temporarily permit all to auth-service for simplicity, can be tightened
+                .pathMatchers("/auth/oauth2/token").permitAll() // Updated path
+                .pathMatchers("/auth/**").permitAll() // Updated path, temporarily permit all to auth-service for simplicity
 
                 // Allow user registration endpoint if it's routed via gateway and intended to be public.
-                // This path is on user-service, accessed via /user-service/** on gateway.
-                .pathMatchers("/user-service/api/users/register").permitAll()
+                // Gateway route /users/** maps to /api/users/** on user-service.
+                // User registration endpoint on user-service is /api/users/register.
+                // So, the gateway path is /users/register.
+                .pathMatchers("/users/register").permitAll() // Updated path
 
                 // Allow actuator endpoints on the gateway itself
                 .pathMatchers("/actuator/**").permitAll()

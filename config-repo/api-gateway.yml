@@ -1,22 +1,31 @@
 server:
-  port: ${SERVER_PORT:8080}
-
+  port: 8080
 spring:
-  application:
-    name: ${APP_NAME:api-gateway}
-  
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
-      default-filters:
-        - name: StripPrefix
-          args:
-            parts: 1
-
+          lower-case-service-id: true # Consistent with service IDs if they are lowercase
+      routes:
+        - id: auth-service-route
+          uri: lb://AUTH-SERVICE # Ensure service ID in Eureka is AUTH-SERVICE (or auth-service if lower-case-service-id: true)
+          predicates:
+            - Path=/auth/** # Changed from /auth-service/** to simplify BFF calls
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+        - id: user-service-route
+          uri: lb://USER-SERVICE # Ensure service ID in Eureka is USER-SERVICE
+          predicates:
+            - Path=/users/** # Changed from /user-service/**
+          filters:
+            - RewritePath=/users/(?<segment>.*), /api/users/$\{segment} # Note: user-service actual path is /api/users
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:9000/oauth2/jwks}
+          issuer-uri: http://auth-service:9000 # Internal using service name
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO # Was TRACE, INFO is usually enough unless debugging routes
+# Ensure spring.application.name=api-gateway is set in bootstrap.yml of the service
