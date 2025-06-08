@@ -27,6 +27,20 @@ spring:
               require-proof-key: false # Simplified for some clients, true is better for public clients
               require-authorization-consent: true
         issuer: http://auth-service:9000 # Internal issuer URI using service name
+  # Datasource configuration for auth-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME_AUTH:authdb}
+    username: ${DB_USERNAME_AUTH:user}
+    password: ${DB_PASSWORD_AUTH:pass}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # Or 'validate' in prod. Use 'update' for now.
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: ${SHOW_SQL:false} # Add if debugging SQL is needed
+        format_sql: ${FORMAT_SQL:false}
 user:
   service:
     base:

@@ -55,6 +55,13 @@ services:
       SERVER_PORT: 9000
       APP_NAME: auth-service
       CONFIG_SERVER_URL: http://config-service:8888
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME_AUTH: authdb
+      DB_USERNAME_AUTH: user
+      DB_PASSWORD_AUTH: pass
+      SHOW_SQL: "false"
+      FORMAT_SQL: "false"
     depends_on:
       - config-service
       - discovery-service
