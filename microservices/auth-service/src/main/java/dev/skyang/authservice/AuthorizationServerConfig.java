@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 // import org.springframework.jdbc.core.JdbcTemplate; // Stays commented out
 // import org.springframework.security.oauth2.core.AuthorizationGrantType; // Stays commented out
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository; // Uncommented and used
+// import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository; // Commented out again
 // import org.springframework.security.oauth2.server.authorization.client.RegisteredClient; // Stays commented out
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository; // Uncommented and used
+// import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository; // Commented out again
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 // import org.springframework.security.oauth2.server.authorization.settings.TokenSettings; // Stays commented out
 
@@ -21,10 +21,10 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 @Configuration
 public class AuthorizationServerConfig {
 
-    @Bean // Uncommented and modified
-    public RegisteredClientRepository registeredClientRepository() { // Removed JdbcTemplate parameter
-        return new InMemoryRegisteredClientRepository(); // Simple instance
-    }
+    // @Bean // Commented out again
+    // public RegisteredClientRepository registeredClientRepository() {
+    //     return new InMemoryRegisteredClientRepository();
+    // }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
