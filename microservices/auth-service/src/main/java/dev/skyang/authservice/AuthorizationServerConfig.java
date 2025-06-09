@@ -7,34 +7,24 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import dev.skyang.authservice.jose.Jwks;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-// import org.springframework.jdbc.core.JdbcTemplate; // Commented out as unused
-// import org.springframework.security.oauth2.core.AuthorizationGrantType; // Commented out as unused
-// import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository; // Commented out as unused
-// import org.springframework.security.oauth2.server.authorization.client.RegisteredClient; // Commented out as unused
-// import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository; // Commented out as unused
+// import org.springframework.jdbc.core.JdbcTemplate; // Stays commented out
+// import org.springframework.security.oauth2.core.AuthorizationGrantType; // Stays commented out
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository; // Uncommented and used
+// import org.springframework.security.oauth2.server.authorization.client.RegisteredClient; // Stays commented out
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository; // Uncommented and used
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-// import org.springframework.security.oauth2.server.authorization.settings.TokenSettings; // Commented out as unused
+// import org.springframework.security.oauth2.server.authorization.settings.TokenSettings; // Stays commented out
 
-// import java.time.Duration; // Commented out as unused
-// import java.util.UUID; // Commented out as unused
+// import java.time.Duration; // Stays commented out
+// import java.util.UUID; // Stays commented out
 
 @Configuration
 public class AuthorizationServerConfig {
 
-    // @Bean // Commented out
-    // public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
-    //     // define an OAuth2 client in DB, or use InMemoryRegisteredClientRepository for testing
-    //     RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
-    //             .clientId("apptmate-client")
-    //             .clientSecret("{noop}secret")
-    //             .scope("read")
-    //             .scope("write")
-    //             .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-    //             .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(1)).build())
-    //             .build();
-    //     return new InMemoryRegisteredClientRepository(client);
-    //     // for production, use JdbcRegisteredClientRepository with jdbcTemplate
-    // }
+    @Bean // Uncommented and modified
+    public RegisteredClientRepository registeredClientRepository() { // Removed JdbcTemplate parameter
+        return new InMemoryRegisteredClientRepository(); // Simple instance
+    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
@@ -46,8 +36,6 @@ public class AuthorizationServerConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder()
-                .issuer("http://localhost:9000")
-                .build();
+        return AuthorizationServerSettings.builder().build(); // Issuer will be picked from properties
     }
 }
