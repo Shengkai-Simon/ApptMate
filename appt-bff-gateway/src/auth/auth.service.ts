@@ -27,14 +27,15 @@ export class AuthService {
     // this.oauthClientSecret = cfg.oauthClientSecret;
 
     // Recommended: Using ConfigService (ensure ConfigModule.forRoot({ load: [appConfig], isGlobal: true }) in AppModule)
-    this.apiGatewayUrl = this.configService.get<string>('apiGatewayUrl', { infer: true });
-    this.oauthClientId = this.configService.get<string>('oauthClientId', { infer: true });
-    this.oauthClientSecret = this.configService.get<string>('oauthClientSecret', { infer: true });
+    this.apiGatewayUrl = this.configService.getOrThrow<string>('apiGatewayUrl', { infer: true });
+    this.oauthClientId = this.configService.getOrThrow<string>('oauthClientId', { infer: true });
+    this.oauthClientSecret = this.configService.getOrThrow<string>('oauthClientSecret', { infer: true });
 
-     if (!this.apiGatewayUrl || !this.oauthClientId || !this.oauthClientSecret) {
-      this.logger.error('Configuration missing: API Gateway URL or OAuth client details are not set.');
-      throw new Error('Configuration missing for AuthService. Check environment variables or app.config.ts');
-    }
+    // The if block below is no longer needed as getOrThrow will handle missing configurations.
+    // if (!this.apiGatewayUrl || !this.oauthClientId || !this.oauthClientSecret) {
+    //  this.logger.error('Configuration missing: API Gateway URL or OAuth client details are not set.');
+    //  throw new Error('Configuration missing for AuthService. Check environment variables or app.config.ts');
+    // }
   }
 
   async login(username: string, password_val: string): Promise<any> {

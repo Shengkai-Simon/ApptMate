@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "name": "Auth Service Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection to test user registration and login via the BFF gateway."
+  },
+  "item": [
+    {
+      "name": "User Authentication",
+      "description": "Requests related to user authentication flows.",
+      "item": [
+        {
+          "name": "Register New User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 or 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([201, 200]);",
+                  "});",
+                  "let requestBody = JSON.parse(pm.request.body.raw);",
+                  "pm.environment.set(\"generatedUsername\", requestBody.username);",
+                  "pm.environment.set(\"generatedEmail\", requestBody.email);",
+                  "pm.environment.set(\"generatedPassword\", requestBody.password);",
+                  "console.log(\"Registered user: \" + requestBody.username);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"user{{$randomInt}}\",\n    \"email\": \"user{{$randomInt}}@example.com\",\n    \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registers a new user with a random username and email."
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "pm.test(\"Login successful message received\", function () {",
+                  "    try {",
+                  "        const responseBody = pm.response.json();",
+                  "        pm.expect(responseBody.message).to.equal(\"Login successful\");",
+                  "    } catch (e) {",
+                  "        pm.expect.fail(\"Response was not valid JSON or message was not 'Login successful'\");",
+                  "    }",
+                  "});",
+                  "pm.test(\"Access token cookie is present\", function () {",
+                  "    const accessTokenCookie = pm.cookies.get(\"access_token\");",
+                  "    pm.expect(accessTokenCookie).to.not.be.undefined;",
+                  "    pm.expect(accessTokenCookie).to.not.be.null;",
+                  "    console.log(\"Access Token Cookie Value: \" + accessTokenCookie);",
+                  "});",
+                  "// Optional:",
+                  "// pm.test(\"Refresh token cookie is present\", function () {",
+                  "//     const refreshTokenCookie = pm.cookies.get(\"refresh_token\");",
+                  "//     pm.expect(refreshTokenCookie).to.not.be.undefined;",
+                  "//     pm.expect(refreshTokenCookie).to.not.be.null;",
+                  "// });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{generatedUsername}}\",\n    \"password\": \"{{generatedPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in the user registered in the previous request using environment variables for credentials."
+          },
+          "response": []
+        }
+      ],
+      "protocolProfileBehavior": {}
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "Base URL for the appt-bff-gateway. Change if deployed elsewhere."
+    }
+  ]
+}
